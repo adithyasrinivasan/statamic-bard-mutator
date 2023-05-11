@@ -11,28 +11,30 @@ class Data
     {
         $step = function ($item, $meta) use (&$callback, &$step) {
             $callback($item, $meta);
-        try {
-            foreach (($item->content ?? []) as $i => $node) {
-                $step($node, [
-                    'parent' => $item,
-                    'prev' => $item->content[$i - 1] ?? null,
-                    'next' => $item->content[$i + 1] ?? null,
-                    'index' => $i,
-                    'depth' => $meta['depth'] + 1,
-                    'root' => $meta['root'],
-                ]);
+            try {
+                foreach (($item->content ?? []) as $i => $node) {
+                    $step($node, [
+                        'parent' => $item,
+                        'prev' => $item->content[$i - 1] ?? null,
+                        'next' => $item->content[$i + 1] ?? null,
+                        'index' => $i,
+                        'depth' => $meta['depth'] + 1,
+                        'root' => $meta['root'],
+                    ]);
+                }
+                foreach (($item->marks ?? []) as $i => $mark) {
+                    $step($mark, [
+                        'parent' => $item,
+                        'prev' => $item->marks[$i - 1] ?? null,
+                        'next' => $item->marks[$i + 1] ?? null,
+                        'index' => $i,
+                        'depth' => $meta['depth'] + 1,
+                        'root' => $meta['root'],
+                    ]);
+                }
+            } catch (\Exception $e){
+
             }
-            foreach (($item->marks ?? []) as $i => $mark) {
-                $step($mark, [
-                    'parent' => $item,
-                    'prev' => $item->marks[$i - 1] ?? null,
-                    'next' => $item->marks[$i + 1] ?? null,
-                    'index' => $i,
-                    'depth' => $meta['depth'] + 1,
-                    'root' => $meta['root'],
-                ]);
-            }
-        } catch (\Exception $e){
         };
         $step($item, [
             'parent' => null,
