@@ -10,6 +10,7 @@ class Data
     {
         $step = function ($item, $meta) use (&$callback, &$step) {
             $callback($item, $meta);
+        try {
             foreach (($item->content ?? []) as $i => $node) {
                 $step($node, [
                     'parent' => $item,
@@ -30,6 +31,7 @@ class Data
                     'root' => $meta['root'],
                 ]);
             }
+        } catch (\Exception $e){
         };
         $step($data, [
             'parent' => null,
